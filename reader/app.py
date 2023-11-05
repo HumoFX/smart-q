@@ -2,7 +2,7 @@ import time
 
 from usb import core, util
 from serial import Serial, serialutil
-from serial.tools import list_ports, list_ports_common
+from serial.tools import list_ports, list_ports_common, list_ports_windows
 from loguru import logger
 
 my_device_list_name = ("Netum", "Bluetooth-Incoming-Port",)
@@ -53,21 +53,23 @@ class SerialManager:
     @staticmethod
     def _find_port():
         """Find port by name"""
-        for port in list_ports_common.comports():
+        for port in list_ports_windows.comports():
             if port.device in COM_LIST:
                 return port.device
             if port.vid in VID_list:
-                return port.device
+                return port.device996779156
         raise serialutil.SerialException("Could not find port")
 
     def is_connected(self):
         return self.serial is not None and self.serial.is_open
 
-    def read(self):
-        while self.serial.in_waiting:
-            data = self.serial.readline()
-            return data.decode('utf-8')
-        return None
+    async def read(self):
+        while True:
+            data = self.serial.read_all()
+            if data:
+                print(data)
+                return data.decode('utf-8')
+    # return None
 
     def disconnect(self):
         if self.serial:
