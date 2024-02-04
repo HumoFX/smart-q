@@ -85,16 +85,16 @@ async def websocket_endpoint(websocket: WebSocket, q: str = None):
     try:
         while True:
             # if websocket disconnect then close serial connection and websocket and stop loop
-            # logger.info(f"Client state: {websocket.client_state}")
+            logger.info(f"Client state: {websocket.client_state}")
 
-            # if websocket.client_state != WebSocketState.CONNECTED:
-            #     logger.info(f"Client state: {websocket.client_state}")
-            #     serial_manager.disconnect()
-            #     await websocket.close()
-            #     break
-            # if not serial_manager.is_connected():
-            #     await websocket.send_text("Device not found")
-            #     break
+            if websocket.client_state != WebSocketState.CONNECTED:
+                logger.info(f"Client state: {websocket.client_state}")
+                serial_manager.disconnect()
+                await websocket.close()
+                break
+            if not serial_manager.is_connected():
+                await websocket.send_text("Device not found")
+                break
             data = await serial_manager.read()
             if data:
                 user_data = await get_user_data(data, mocked=True)
@@ -113,6 +113,6 @@ async def websocket_endpoint(websocket: WebSocket, q: str = None):
 app.include_router(router)
 
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+# if __name__ == "__main__":
+#     import uvicorn
+#     uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)
