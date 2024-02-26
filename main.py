@@ -45,10 +45,6 @@ def get_user_json(uuid: str):
 
     }
 
-
-<<<<<<< HEAD
-async def get_user_data(uuid, mocked: bool = False):
-=======
 @dataclass
 class ApiGateway:
     base_url: str = None
@@ -68,7 +64,6 @@ class ApiGateway:
 
 
 async def get_user_data(uuid: str, mocked: bool = False):
->>>>>>> 02f1b3b14457b82f30734683f613a35d41c531bb
     if mocked:
         return get_user_json(uuid)
     async with aiohttp.ClientSession() as session:
