@@ -19,3 +19,5 @@ click~=8.1.7
 uvicorn~=0.27.0.post1
 setuptools~=65.5.0
 loguru~=0.7.2
+pyusb~=1.2.1
+websockets~=12.0
