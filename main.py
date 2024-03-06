@@ -49,7 +49,7 @@ def get_user_json(uuid: str):
 
 @dataclass
 class ApiGateway:
-    base_url: str = "https://ledokol-journal-api.kebzu.com"
+    base_url: str = "https://ledokol-journal-api.kebzu.com/api/v1"
     # base_url: str = "http://127.0.0.1:8001/api/v1"
     headers: dict = None
     timeout: int = 30
