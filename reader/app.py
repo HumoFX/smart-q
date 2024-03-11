@@ -33,6 +33,7 @@ class SerialManager:
                 stopbits=serialutil.STOPBITS_ONE, timeout=None, xonxoff=False, rtscts=False,
                 write_timeout=None, dsrdtr=False, inter_byte_timeout=None, exclusive=None):
         self._port = self._find_port()
+        logger.info(f"Port: {self._port}")
         self.serial = Serial(self._port, baudrate, bytesize, parity, stopbits, timeout, xonxoff, rtscts,
                              write_timeout, dsrdtr, inter_byte_timeout, exclusive)
         self._baudrate = baudrate
@@ -56,6 +57,7 @@ class SerialManager:
         # for port in list_ports_osx.comports():
         for port in list_ports.comports():
             if port.device in COM_LIST:
+                logger.info(port.device)
                 return port.device
             if port.vid in VID_list:
                 return port.device
@@ -65,11 +67,33 @@ class SerialManager:
         return self.serial is not None and self.serial.is_open
 
     async def read(self):
+        # free buffer
+        # data = b''  # Initialize an empty byte string
         while True:
+            # Read a chunk of data
             data = self.serial.read_all()
             if data:
-                print(data)
+                logger.info(data)
+                logger.info(data.decode('utf-8').replace('\r\n', ''))
                 return data.decode('utf-8')
+            # logger.info(data)
+            # logger.info(data.decode('utf-8'))
+
+            # If the chunk is empty, stop reading
+            # Append the chunk to the data
+
+            # end of reading
+            # return data.decode('utf-8')
+
+        # except Exception as e:
+        #     logger.error(e)
+        #     return None
+        # #
+        # while True:
+        #     data = self.serial.read_all()
+        #     if data:
+        #         print(data)
+        #         return data.decode('utf-8')
     # return None
 
     def disconnect(self):
